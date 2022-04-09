@@ -1,7 +1,6 @@
 import { Artifact } from 'aws-cdk-lib/aws-codepipeline';
 import { SecretValue, Stack } from 'aws-cdk-lib';
 import { GitHubSourceAction, GitHubTrigger } from 'aws-cdk-lib/aws-codepipeline-actions';
-import { AwsEnvironments } from '@infra/common/enums/aws-environments.enum';
 import { GitHubOAuthTokenSecret } from '../enums/github-oauth-token-secret.enum';
 import { PipelineArtifacts } from '../enums/pipeline-artifacts.enum';
 import { SourceAction } from '../types/source-action.type';
@@ -17,14 +16,14 @@ export const sourceGitHubAction = (scope: Stack): SourceAction => {
 
   const sourceArtifact = new Artifact(PipelineArtifacts.sourceArtifact);
 
-  const branch = scope.account === AwsEnvironments.production ? 'main' : 'develop';
+  const branch = 'main';
 
   const sourceAction = new GitHubSourceAction({
     actionName: 'SourceGitHubAction',
     oauthToken,
     branch,
-    owner: 'boohoo-com',
-    repo: 'global-returns-frontend',
+    owner: 'Tobivo-AB ',
+    repo: 'cdk-test',
     trigger: GitHubTrigger.POLL,
     output: sourceArtifact
   });
