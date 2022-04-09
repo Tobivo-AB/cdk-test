@@ -11,6 +11,9 @@
 # production
 /build
 
+# CDK
+/cdk.out
+
 # misc
 .DS_Store
 .env.local
