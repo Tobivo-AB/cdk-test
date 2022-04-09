@@ -1,0 +1,325 @@
+{
+  "version": "17.0.0",
+  "artifacts": {
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    },
+    "CDK-TEST.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "CDK-TEST.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "CDK-TEST": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://949733501269/eu-north-1",
+      "properties": {
+        "templateFile": "CDK-TEST.template.json",
+        "terminationProtection": true,
+        "tags": {
+          "Application": "CDK-TEST",
+          "Team": "Ejaad"
+        },
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::949733501269:role/cdk-hnb659fds-deploy-role-949733501269-eu-north-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::949733501269:role/cdk-hnb659fds-cfn-exec-role-949733501269-eu-north-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-949733501269-eu-north-1/61cf8e7b3b107e1ff5c090545ff622c855e5fea59d8bf905f4ae8be6e8c61bb7.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "CDK-TEST.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::949733501269:role/cdk-hnb659fds-lookup-role-949733501269-eu-north-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "CDK-TEST.assets"
+      ],
+      "metadata": {
+        "/CDK-TEST": [
+          {
+            "type": "aws:cdk:stack-tags",
+            "data": [
+              {
+                "Key": "Application",
+                "Value": "CDK-TEST"
+              },
+              {
+                "Key": "Team",
+                "Value": "Ejaad"
+              }
+            ]
+          }
+        ],
+        "/CDK-TEST/GlobalReturnsFrontendStore/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GlobalReturnsFrontendStore55FF27BC"
+          }
+        ],
+        "/CDK-TEST/GlobalReturnsFrontendStore/Policy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GlobalReturnsFrontendStorePolicy3CF0D9D1"
+          }
+        ],
+        "/CDK-TEST/DeployStaticSite/AwsCliLayer/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DeployStaticSiteAwsCliLayerB8D35216"
+          }
+        ],
+        "/CDK-TEST/DeployStaticSite/CustomResource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DeployStaticSiteCustomResource432E588C"
+          }
+        ],
+        "/CDK-TEST/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265"
+          }
+        ],
+        "/CDK-TEST/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRoleDefaultPolicy88902FDF"
+          }
+        ],
+        "/CDK-TEST/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C81C01536"
+          }
+        ],
+        "/CDK-TEST/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/CDK-TEST/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/CDK-TEST/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "CDK-TEST"
+    },
+    "CDK-TEST-CICD.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "CDK-TEST-CICD.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "CDK-TEST-CICD": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://949733501269/eu-north-1",
+      "properties": {
+        "templateFile": "CDK-TEST-CICD.template.json",
+        "terminationProtection": true,
+        "tags": {
+          "Application": "CDK-TEST",
+          "Team": "Ejaad"
+        },
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::949733501269:role/cdk-hnb659fds-deploy-role-949733501269-eu-north-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::949733501269:role/cdk-hnb659fds-cfn-exec-role-949733501269-eu-north-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-949733501269-eu-north-1/4b0f8081e0552da8f4a20d80f19345e6fad91cf1fb1ea7500c6c8c2b39817a9b.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "CDK-TEST-CICD.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::949733501269:role/cdk-hnb659fds-lookup-role-949733501269-eu-north-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "CDK-TEST-CICD.assets"
+      ],
+      "metadata": {
+        "/CDK-TEST-CICD": [
+          {
+            "type": "aws:cdk:stack-tags",
+            "data": [
+              {
+                "Key": "Application",
+                "Value": "CDK-TEST"
+              },
+              {
+                "Key": "Team",
+                "Value": "Ejaad"
+              }
+            ]
+          }
+        ],
+        "/CDK-TEST-CICD/CRFE-CicdNotifications/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CRFECicdNotificationsB5FED45A"
+          }
+        ],
+        "/CDK-TEST-CICD/CRFE-ChatbotSlackNotifications/ConfigurationRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CRFEChatbotSlackNotificationsConfigurationRoleB23304A0"
+          }
+        ],
+        "/CDK-TEST-CICD/CRFE-ChatbotSlackNotifications/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CRFEChatbotSlackNotifications89678AF3"
+          }
+        ],
+        "/CDK-TEST-CICD/CDK-TEST-CICDPipeline/Role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKTESTCICDPipelineRole5F9F5299"
+          }
+        ],
+        "/CDK-TEST-CICD/CDK-TEST-CICDPipeline/Role/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKTESTCICDPipelineRoleDefaultPolicyA947ECC8"
+          }
+        ],
+        "/CDK-TEST-CICD/CDK-TEST-CICDPipeline/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKTESTCICDPipeline2AABE882"
+          }
+        ],
+        "/CDK-TEST-CICD/CDK-TEST-CICDPipeline/Build/BuildForDeployment/CodePipelineActionRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKTESTCICDPipelineBuildBuildForDeploymentCodePipelineActionRole3EA4C295"
+          }
+        ],
+        "/CDK-TEST-CICD/CDK-TEST-CICDPipeline/Build/BuildForDeployment/CodePipelineActionRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKTESTCICDPipelineBuildBuildForDeploymentCodePipelineActionRoleDefaultPolicy0F2B106D"
+          }
+        ],
+        "/CDK-TEST-CICD/CDK-TEST-CICDPipeline/PipelineSelfUpdate/PipelineSelfUpdate/CodePipelineActionRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKTESTCICDPipelinePipelineSelfUpdateCodePipelineActionRoleD5235E65"
+          }
+        ],
+        "/CDK-TEST-CICD/CDK-TEST-CICDPipeline/PipelineSelfUpdate/PipelineSelfUpdate/CodePipelineActionRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKTESTCICDPipelinePipelineSelfUpdateCodePipelineActionRoleDefaultPolicy89BE0D39"
+          }
+        ],
+        "/CDK-TEST-CICD/CDK-TEST-CICDPipeline/PipelineSelfUpdate/PipelineSelfUpdate/Role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKTESTCICDPipelinePipelineSelfUpdateRole6776FE34"
+          }
+        ],
+        "/CDK-TEST-CICD/CDK-TEST-CICDPipeline/PipelineSelfUpdate/PipelineSelfUpdate/Role/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKTESTCICDPipelinePipelineSelfUpdateRoleDefaultPolicyF937E458"
+          }
+        ],
+        "/CDK-TEST-CICD/CDK-TEST-CICDPipeline/Deploy/CreateCDK-TESTChangeSet/CodePipelineActionRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKTESTCICDPipelineDeployCreateCDKTESTChangeSetCodePipelineActionRole5F7D119B"
+          }
+        ],
+        "/CDK-TEST-CICD/CDK-TEST-CICDPipeline/Deploy/CreateCDK-TESTChangeSet/CodePipelineActionRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKTESTCICDPipelineDeployCreateCDKTESTChangeSetCodePipelineActionRoleDefaultPolicy63B1AEBA"
+          }
+        ],
+        "/CDK-TEST-CICD/CDK-TEST-CICDPipeline/Deploy/CreateCDK-TESTChangeSet/Role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKTESTCICDPipelineDeployCreateCDKTESTChangeSetRoleE524E01A"
+          }
+        ],
+        "/CDK-TEST-CICD/CDK-TEST-CICDPipeline/Deploy/CreateCDK-TESTChangeSet/Role/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKTESTCICDPipelineDeployCreateCDKTESTChangeSetRoleDefaultPolicy34942321"
+          }
+        ],
+        "/CDK-TEST-CICD/CDK-TEST-CICDPipeline/Deploy/ExecuteCDK-TESTChangeSet/CodePipelineActionRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKTESTCICDPipelineDeployExecuteCDKTESTChangeSetCodePipelineActionRole99772943"
+          }
+        ],
+        "/CDK-TEST-CICD/CDK-TEST-CICDPipeline/Deploy/ExecuteCDK-TESTChangeSet/CodePipelineActionRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKTESTCICDPipelineDeployExecuteCDKTESTChangeSetCodePipelineActionRoleDefaultPolicyADF7F257"
+          }
+        ],
+        "/CDK-TEST-CICD/BuildProject/Role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BuildProjectRoleAA92C755"
+          }
+        ],
+        "/CDK-TEST-CICD/BuildProject/Role/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BuildProjectRoleDefaultPolicy3E9F248C"
+          }
+        ],
+        "/CDK-TEST-CICD/BuildProject/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BuildProject097C5DB7"
+          }
+        ],
+        "/CDK-TEST-CICD/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/CDK-TEST-CICD/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/CDK-TEST-CICD/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "CDK-TEST-CICD"
+    }
+  }
+}

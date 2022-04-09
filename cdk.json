@@ -1,0 +1,3 @@
+{
+  "app": "npx ts-node -r tsconfig-paths/register -O '{\"module\": \"commonjs\"}' infra/bin/global-returns-frontend.app.ts"
+}

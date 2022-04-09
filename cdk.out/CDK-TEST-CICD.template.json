@@ -1,0 +1,1139 @@
+{
+ "Resources": {
+  "CRFECicdNotificationsB5FED45A": {
+   "Type": "AWS::SNS::Topic",
+   "Metadata": {
+    "aws:cdk:path": "CDK-TEST-CICD/CRFE-CicdNotifications/Resource"
+   }
+  },
+  "CRFEChatbotSlackNotificationsConfigurationRoleB23304A0": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "chatbot.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CDK-TEST-CICD/CRFE-ChatbotSlackNotifications/ConfigurationRole/Resource"
+   }
+  },
+  "CRFEChatbotSlackNotifications89678AF3": {
+   "Type": "AWS::Chatbot::SlackChannelConfiguration",
+   "Properties": {
+    "ConfigurationName": "CDK-TEST-CICD-cicd-notifications",
+    "IamRoleArn": {
+     "Fn::GetAtt": [
+      "CRFEChatbotSlackNotificationsConfigurationRoleB23304A0",
+      "Arn"
+     ]
+    },
+    "SlackChannelId": "C03AE18J3DM",
+    "SlackWorkspaceId": "T01RY9E5D9A",
+    "SnsTopicArns": [
+     {
+      "Ref": "CRFECicdNotificationsB5FED45A"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CDK-TEST-CICD/CRFE-ChatbotSlackNotifications/Resource"
+   }
+  },
+  "CDKTESTCICDPipelineRole5F9F5299": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "codepipeline.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CDK-TEST-CICD/CDK-TEST-CICDPipeline/Role/Resource"
+   }
+  },
+  "CDKTESTCICDPipelineRoleDefaultPolicyA947ECC8": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:GetObject*",
+        "s3:GetBucket*",
+        "s3:List*",
+        "s3:DeleteObject*",
+        "s3:PutObject",
+        "s3:PutObjectLegalHold",
+        "s3:PutObjectRetention",
+        "s3:PutObjectTagging",
+        "s3:PutObjectVersionTagging",
+        "s3:Abort*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":s3:::tb-949733501269.codepipeline-artifacts.eu-north-1"
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":s3:::tb-949733501269.codepipeline-artifacts.eu-north-1/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "CDKTESTCICDPipelineBuildBuildForDeploymentCodePipelineActionRole3EA4C295",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "CDKTESTCICDPipelinePipelineSelfUpdateCodePipelineActionRoleD5235E65",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "CDKTESTCICDPipelineDeployCreateCDKTESTChangeSetCodePipelineActionRole5F7D119B",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "CDKTESTCICDPipelineDeployExecuteCDKTESTChangeSetCodePipelineActionRole99772943",
+         "Arn"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "CDKTESTCICDPipelineRoleDefaultPolicyA947ECC8",
+    "Roles": [
+     {
+      "Ref": "CDKTESTCICDPipelineRole5F9F5299"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CDK-TEST-CICD/CDK-TEST-CICDPipeline/Role/DefaultPolicy/Resource"
+   }
+  },
+  "CDKTESTCICDPipeline2AABE882": {
+   "Type": "AWS::CodePipeline::Pipeline",
+   "Properties": {
+    "RoleArn": {
+     "Fn::GetAtt": [
+      "CDKTESTCICDPipelineRole5F9F5299",
+      "Arn"
+     ]
+    },
+    "Stages": [
+     {
+      "Actions": [
+       {
+        "ActionTypeId": {
+         "Category": "Source",
+         "Owner": "ThirdParty",
+         "Provider": "GitHub",
+         "Version": "1"
+        },
+        "Configuration": {
+         "Owner": "boohoo-com",
+         "Repo": "global-returns-frontend",
+         "Branch": "develop",
+         "OAuthToken": "{{resolve:secretsmanager:/scs/pipeline/github_oauth_token:SecretString:::}}",
+         "PollForSourceChanges": true
+        },
+        "Name": "SourceGitHubAction",
+        "OutputArtifacts": [
+         {
+          "Name": "sourceArtifact"
+         }
+        ],
+        "RunOrder": 1
+       }
+      ],
+      "Name": "Source"
+     },
+     {
+      "Actions": [
+       {
+        "ActionTypeId": {
+         "Category": "Build",
+         "Owner": "AWS",
+         "Provider": "CodeBuild",
+         "Version": "1"
+        },
+        "Configuration": {
+         "ProjectName": {
+          "Ref": "BuildProject097C5DB7"
+         }
+        },
+        "InputArtifacts": [
+         {
+          "Name": "sourceArtifact"
+         }
+        ],
+        "Name": "BuildForDeployment",
+        "OutputArtifacts": [
+         {
+          "Name": "buildInfraArtifact"
+         }
+        ],
+        "RoleArn": {
+         "Fn::GetAtt": [
+          "CDKTESTCICDPipelineBuildBuildForDeploymentCodePipelineActionRole3EA4C295",
+          "Arn"
+         ]
+        },
+        "RunOrder": 1
+       }
+      ],
+      "Name": "Build"
+     },
+     {
+      "Actions": [
+       {
+        "ActionTypeId": {
+         "Category": "Deploy",
+         "Owner": "AWS",
+         "Provider": "CloudFormation",
+         "Version": "1"
+        },
+        "Configuration": {
+         "StackName": "CDK-TEST-CICD",
+         "Capabilities": "CAPABILITY_NAMED_IAM",
+         "RoleArn": {
+          "Fn::GetAtt": [
+           "CDKTESTCICDPipelinePipelineSelfUpdateRole6776FE34",
+           "Arn"
+          ]
+         },
+         "ActionMode": "CREATE_UPDATE",
+         "TemplatePath": "buildInfraArtifact::CDK-TEST-CICD.template.json"
+        },
+        "InputArtifacts": [
+         {
+          "Name": "buildInfraArtifact"
+         }
+        ],
+        "Name": "PipelineSelfUpdate",
+        "RoleArn": {
+         "Fn::GetAtt": [
+          "CDKTESTCICDPipelinePipelineSelfUpdateCodePipelineActionRoleD5235E65",
+          "Arn"
+         ]
+        },
+        "RunOrder": 1
+       }
+      ],
+      "Name": "PipelineSelfUpdate"
+     },
+     {
+      "Actions": [
+       {
+        "ActionTypeId": {
+         "Category": "Deploy",
+         "Owner": "AWS",
+         "Provider": "CloudFormation",
+         "Version": "1"
+        },
+        "Configuration": {
+         "StackName": "CDK-TEST",
+         "Capabilities": "CAPABILITY_NAMED_IAM",
+         "RoleArn": {
+          "Fn::GetAtt": [
+           "CDKTESTCICDPipelineDeployCreateCDKTESTChangeSetRoleE524E01A",
+           "Arn"
+          ]
+         },
+         "ActionMode": "CHANGE_SET_REPLACE",
+         "ChangeSetName": "CDK-TEST-change-set",
+         "TemplatePath": "buildInfraArtifact::CDK-TEST.template.json"
+        },
+        "InputArtifacts": [
+         {
+          "Name": "buildInfraArtifact"
+         }
+        ],
+        "Name": "CreateCDK-TESTChangeSet",
+        "RoleArn": {
+         "Fn::GetAtt": [
+          "CDKTESTCICDPipelineDeployCreateCDKTESTChangeSetCodePipelineActionRole5F7D119B",
+          "Arn"
+         ]
+        },
+        "RunOrder": 1
+       },
+       {
+        "ActionTypeId": {
+         "Category": "Deploy",
+         "Owner": "AWS",
+         "Provider": "CloudFormation",
+         "Version": "1"
+        },
+        "Configuration": {
+         "StackName": "CDK-TEST",
+         "ActionMode": "CHANGE_SET_EXECUTE",
+         "ChangeSetName": "CDK-TEST-change-set"
+        },
+        "Name": "ExecuteCDK-TESTChangeSet",
+        "RoleArn": {
+         "Fn::GetAtt": [
+          "CDKTESTCICDPipelineDeployExecuteCDKTESTChangeSetCodePipelineActionRole99772943",
+          "Arn"
+         ]
+        },
+        "RunOrder": 3
+       }
+      ],
+      "Name": "Deploy"
+     }
+    ],
+    "ArtifactStore": {
+     "Location": "tb-949733501269.codepipeline-artifacts.eu-north-1",
+     "Type": "S3"
+    },
+    "Name": "CDK-TEST-CICD-Pipeline",
+    "RestartExecutionOnUpdate": true
+   },
+   "DependsOn": [
+    "CDKTESTCICDPipelineRoleDefaultPolicyA947ECC8",
+    "CDKTESTCICDPipelineRole5F9F5299"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "CDK-TEST-CICD/CDK-TEST-CICDPipeline/Resource"
+   }
+  },
+  "CDKTESTCICDPipelineBuildBuildForDeploymentCodePipelineActionRole3EA4C295": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":iam::949733501269:root"
+          ]
+         ]
+        }
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CDK-TEST-CICD/CDK-TEST-CICDPipeline/Build/BuildForDeployment/CodePipelineActionRole/Resource"
+   }
+  },
+  "CDKTESTCICDPipelineBuildBuildForDeploymentCodePipelineActionRoleDefaultPolicy0F2B106D": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "codebuild:BatchGetBuilds",
+        "codebuild:StartBuild",
+        "codebuild:StopBuild"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "BuildProject097C5DB7",
+         "Arn"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "CDKTESTCICDPipelineBuildBuildForDeploymentCodePipelineActionRoleDefaultPolicy0F2B106D",
+    "Roles": [
+     {
+      "Ref": "CDKTESTCICDPipelineBuildBuildForDeploymentCodePipelineActionRole3EA4C295"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CDK-TEST-CICD/CDK-TEST-CICDPipeline/Build/BuildForDeployment/CodePipelineActionRole/DefaultPolicy/Resource"
+   }
+  },
+  "CDKTESTCICDPipelinePipelineSelfUpdateCodePipelineActionRoleD5235E65": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":iam::949733501269:root"
+          ]
+         ]
+        }
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CDK-TEST-CICD/CDK-TEST-CICDPipeline/PipelineSelfUpdate/PipelineSelfUpdate/CodePipelineActionRole/Resource"
+   }
+  },
+  "CDKTESTCICDPipelinePipelineSelfUpdateCodePipelineActionRoleDefaultPolicy89BE0D39": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "iam:PassRole",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "CDKTESTCICDPipelinePipelineSelfUpdateRole6776FE34",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": [
+        "s3:GetObject*",
+        "s3:GetBucket*",
+        "s3:List*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":s3:::tb-949733501269.codepipeline-artifacts.eu-north-1"
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":s3:::tb-949733501269.codepipeline-artifacts.eu-north-1/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "cloudformation:CreateStack",
+        "cloudformation:DescribeStack*",
+        "cloudformation:GetStackPolicy",
+        "cloudformation:GetTemplate*",
+        "cloudformation:SetStackPolicy",
+        "cloudformation:UpdateStack",
+        "cloudformation:ValidateTemplate"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          "arn:",
+          {
+           "Ref": "AWS::Partition"
+          },
+          ":cloudformation:eu-north-1:949733501269:stack/CDK-TEST-CICD/*"
+         ]
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "CDKTESTCICDPipelinePipelineSelfUpdateCodePipelineActionRoleDefaultPolicy89BE0D39",
+    "Roles": [
+     {
+      "Ref": "CDKTESTCICDPipelinePipelineSelfUpdateCodePipelineActionRoleD5235E65"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CDK-TEST-CICD/CDK-TEST-CICDPipeline/PipelineSelfUpdate/PipelineSelfUpdate/CodePipelineActionRole/DefaultPolicy/Resource"
+   }
+  },
+  "CDKTESTCICDPipelinePipelineSelfUpdateRole6776FE34": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "cloudformation.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CDK-TEST-CICD/CDK-TEST-CICDPipeline/PipelineSelfUpdate/PipelineSelfUpdate/Role/Resource"
+   }
+  },
+  "CDKTESTCICDPipelinePipelineSelfUpdateRoleDefaultPolicyF937E458": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:GetObject*",
+        "s3:GetBucket*",
+        "s3:List*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":s3:::tb-949733501269.codepipeline-artifacts.eu-north-1"
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":s3:::tb-949733501269.codepipeline-artifacts.eu-north-1/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": "*",
+       "Effect": "Allow",
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "CDKTESTCICDPipelinePipelineSelfUpdateRoleDefaultPolicyF937E458",
+    "Roles": [
+     {
+      "Ref": "CDKTESTCICDPipelinePipelineSelfUpdateRole6776FE34"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CDK-TEST-CICD/CDK-TEST-CICDPipeline/PipelineSelfUpdate/PipelineSelfUpdate/Role/DefaultPolicy/Resource"
+   }
+  },
+  "CDKTESTCICDPipelineDeployCreateCDKTESTChangeSetCodePipelineActionRole5F7D119B": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":iam::949733501269:root"
+          ]
+         ]
+        }
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CDK-TEST-CICD/CDK-TEST-CICDPipeline/Deploy/CreateCDK-TESTChangeSet/CodePipelineActionRole/Resource"
+   }
+  },
+  "CDKTESTCICDPipelineDeployCreateCDKTESTChangeSetCodePipelineActionRoleDefaultPolicy63B1AEBA": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "iam:PassRole",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "CDKTESTCICDPipelineDeployCreateCDKTESTChangeSetRoleE524E01A",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": [
+        "s3:GetObject*",
+        "s3:GetBucket*",
+        "s3:List*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":s3:::tb-949733501269.codepipeline-artifacts.eu-north-1"
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":s3:::tb-949733501269.codepipeline-artifacts.eu-north-1/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "cloudformation:CreateChangeSet",
+        "cloudformation:DeleteChangeSet",
+        "cloudformation:DescribeChangeSet",
+        "cloudformation:DescribeStacks"
+       ],
+       "Condition": {
+        "StringEqualsIfExists": {
+         "cloudformation:ChangeSetName": "CDK-TEST-change-set"
+        }
+       },
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          "arn:",
+          {
+           "Ref": "AWS::Partition"
+          },
+          ":cloudformation:eu-north-1:949733501269:stack/CDK-TEST/*"
+         ]
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "CDKTESTCICDPipelineDeployCreateCDKTESTChangeSetCodePipelineActionRoleDefaultPolicy63B1AEBA",
+    "Roles": [
+     {
+      "Ref": "CDKTESTCICDPipelineDeployCreateCDKTESTChangeSetCodePipelineActionRole5F7D119B"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CDK-TEST-CICD/CDK-TEST-CICDPipeline/Deploy/CreateCDK-TESTChangeSet/CodePipelineActionRole/DefaultPolicy/Resource"
+   }
+  },
+  "CDKTESTCICDPipelineDeployCreateCDKTESTChangeSetRoleE524E01A": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "cloudformation.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CDK-TEST-CICD/CDK-TEST-CICDPipeline/Deploy/CreateCDK-TESTChangeSet/Role/Resource"
+   }
+  },
+  "CDKTESTCICDPipelineDeployCreateCDKTESTChangeSetRoleDefaultPolicy34942321": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:GetObject*",
+        "s3:GetBucket*",
+        "s3:List*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":s3:::tb-949733501269.codepipeline-artifacts.eu-north-1"
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":s3:::tb-949733501269.codepipeline-artifacts.eu-north-1/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": "*",
+       "Effect": "Allow",
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "CDKTESTCICDPipelineDeployCreateCDKTESTChangeSetRoleDefaultPolicy34942321",
+    "Roles": [
+     {
+      "Ref": "CDKTESTCICDPipelineDeployCreateCDKTESTChangeSetRoleE524E01A"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CDK-TEST-CICD/CDK-TEST-CICDPipeline/Deploy/CreateCDK-TESTChangeSet/Role/DefaultPolicy/Resource"
+   }
+  },
+  "CDKTESTCICDPipelineDeployExecuteCDKTESTChangeSetCodePipelineActionRole99772943": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":iam::949733501269:root"
+          ]
+         ]
+        }
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CDK-TEST-CICD/CDK-TEST-CICDPipeline/Deploy/ExecuteCDK-TESTChangeSet/CodePipelineActionRole/Resource"
+   }
+  },
+  "CDKTESTCICDPipelineDeployExecuteCDKTESTChangeSetCodePipelineActionRoleDefaultPolicyADF7F257": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "cloudformation:DescribeChangeSet",
+        "cloudformation:DescribeStacks",
+        "cloudformation:ExecuteChangeSet"
+       ],
+       "Condition": {
+        "StringEqualsIfExists": {
+         "cloudformation:ChangeSetName": "CDK-TEST-change-set"
+        }
+       },
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          "arn:",
+          {
+           "Ref": "AWS::Partition"
+          },
+          ":cloudformation:eu-north-1:949733501269:stack/CDK-TEST/*"
+         ]
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "CDKTESTCICDPipelineDeployExecuteCDKTESTChangeSetCodePipelineActionRoleDefaultPolicyADF7F257",
+    "Roles": [
+     {
+      "Ref": "CDKTESTCICDPipelineDeployExecuteCDKTESTChangeSetCodePipelineActionRole99772943"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CDK-TEST-CICD/CDK-TEST-CICDPipeline/Deploy/ExecuteCDK-TESTChangeSet/CodePipelineActionRole/DefaultPolicy/Resource"
+   }
+  },
+  "BuildProjectRoleAA92C755": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "codebuild.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CDK-TEST-CICD/BuildProject/Role/Resource"
+   }
+  },
+  "BuildProjectRoleDefaultPolicy3E9F248C": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":logs:eu-north-1:949733501269:log-group:/aws/codebuild/",
+           {
+            "Ref": "BuildProject097C5DB7"
+           }
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":logs:eu-north-1:949733501269:log-group:/aws/codebuild/",
+           {
+            "Ref": "BuildProject097C5DB7"
+           },
+           ":*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "codebuild:CreateReportGroup",
+        "codebuild:CreateReport",
+        "codebuild:UpdateReport",
+        "codebuild:BatchPutTestCases",
+        "codebuild:BatchPutCodeCoverages"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          "arn:",
+          {
+           "Ref": "AWS::Partition"
+          },
+          ":codebuild:eu-north-1:949733501269:report-group/",
+          {
+           "Ref": "BuildProject097C5DB7"
+          },
+          "-*"
+         ]
+        ]
+       }
+      },
+      {
+       "Action": [
+        "secretsmanager:GetSecretValue",
+        "secretsmanager:DescribeSecret"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          "arn:",
+          {
+           "Ref": "AWS::Partition"
+          },
+          ":secretsmanager:eu-north-1:949733501269:secret:/scs/pipeline/github_oauth_token-??????"
+         ]
+        ]
+       }
+      },
+      {
+       "Action": "ec2:DescribeAvailabilityZones",
+       "Effect": "Allow",
+       "Resource": "*"
+      },
+      {
+       "Action": [
+        "s3:GetObject*",
+        "s3:GetBucket*",
+        "s3:List*",
+        "s3:DeleteObject*",
+        "s3:PutObject",
+        "s3:PutObjectLegalHold",
+        "s3:PutObjectRetention",
+        "s3:PutObjectTagging",
+        "s3:PutObjectVersionTagging",
+        "s3:Abort*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":s3:::tb-949733501269.codepipeline-artifacts.eu-north-1"
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":s3:::tb-949733501269.codepipeline-artifacts.eu-north-1/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "BuildProjectRoleDefaultPolicy3E9F248C",
+    "Roles": [
+     {
+      "Ref": "BuildProjectRoleAA92C755"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CDK-TEST-CICD/BuildProject/Role/DefaultPolicy/Resource"
+   }
+  },
+  "BuildProject097C5DB7": {
+   "Type": "AWS::CodeBuild::Project",
+   "Properties": {
+    "Artifacts": {
+     "Type": "CODEPIPELINE"
+    },
+    "Environment": {
+     "ComputeType": "BUILD_GENERAL1_MEDIUM",
+     "Image": "aws/codebuild/standard:5.0",
+     "ImagePullCredentialsType": "CODEBUILD",
+     "PrivilegedMode": false,
+     "Type": "LINUX_CONTAINER"
+    },
+    "ServiceRole": {
+     "Fn::GetAtt": [
+      "BuildProjectRoleAA92C755",
+      "Arn"
+     ]
+    },
+    "Source": {
+     "BuildSpec": "{\n  \"version\": 0.2,\n  \"env\": {\n    \"secrets-manager\": {\n      \"GITHUB_TOKEN\": \"/scs/pipeline/github_oauth_token\"\n    }\n  },\n  \"phases\": {\n    \"install\": {\n      \"runtime-versions\": {\n        \"nodejs\": 14\n      }\n    },\n    \"pre_build\": {\n      \"on-failure\": \"ABORT\",\n      \"commands\": [\n        \"echo //npm.pkg.github.com/:_authToken=${GITHUB_TOKEN} >> ~/.npmrc\",\n        \"npm install\"\n      ]\n    },\n    \"build\": {\n      \"on-failure\": \"ABORT\",\n      \"commands\": [\n        \"npm run build\",\n        \"npm run cdk:synth\"\n      ]\n    }\n  },\n  \"artifacts\": {\n    \"base-directory\": \"cdk.out\",\n    \"files\": \"**/*\",\n    \"secondary-artifacts\": {\n      \"buildInfraArtifact\": {\n        \"base-directory\": \"cdk.out\",\n        \"files\": [\n          \"**/*\"\n        ]\n      }\n    }\n  }\n}",
+     "Type": "CODEPIPELINE"
+    },
+    "Cache": {
+     "Type": "NO_CACHE"
+    },
+    "EncryptionKey": "alias/aws/s3",
+    "Name": "GRFE-BuildProject"
+   },
+   "Metadata": {
+    "aws:cdk:path": "CDK-TEST-CICD/BuildProject/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/3XNwW6DMAyA4WfpPXilm7R7eQHEdp+CcVdDaiOSbJqivPsgIO20k/84X5QLXM5wPtlvX+EwVY57SG/B4mTW1Ufy4iG968xompuUyAbvNvQaVuhW2NytCLlG5cafcbGBVTb872U2bB+QOnW0uTJbdYw/23GvbPwzXCNOFK7Wk0EdaOaZHAtBao8q/uhcTB/ZDX+gXXQkDMXtmbPpyGtccP/86GxkfQ2jf/qqX6B+hfo0euZqiRL4QdDt8xeZnoFoLgEAAA=="
+   },
+   "Metadata": {
+    "aws:cdk:path": "CDK-TEST-CICD/CDKMetadata/Default"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}
