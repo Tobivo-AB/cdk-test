@@ -22,7 +22,7 @@ export const codePipeline = (scope: Stack, notificationTopic: Topic): Pipeline =
   const artifactBucket = Bucket.fromBucketName(
     scope,
     'PipelineArtifactBucket',
-    PipelineBucket.name
+    `bh-${scope.account}.codepipeline-artifacts.${scope.region}`
   );
   const deployBucket = siteBucket(scope);
   const pipeline = new Pipeline(scope, `${StackIdentifiers.pipelineStack}Pipeline`, {
