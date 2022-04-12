@@ -40,13 +40,15 @@ export const codeBuildAction = (scope: Construct, sourceArtifact: Artifact): Bui
   }));
 
   const buildInfraArtifact = new Artifact(PipelineArtifacts.buildInfraArtifact);
+  const buildSrcArtifact = new Artifact(PipelineArtifacts.buildSrcArtifact);
 
   const buildAction = new CodeBuildAction({
     actionName: 'BuildForDeployment',
     input: sourceArtifact,
     project: buildProject,
     outputs: [
-      buildInfraArtifact
+      buildInfraArtifact,
+      buildSrcArtifact
     ]
   });
 
@@ -54,7 +56,8 @@ export const codeBuildAction = (scope: Construct, sourceArtifact: Artifact): Bui
     buildProject,
     buildAction,
     buildOutputs: {
-      buildInfraArtifact
+      buildInfraArtifact,
+      buildSrcArtifact
     }
   };
 };

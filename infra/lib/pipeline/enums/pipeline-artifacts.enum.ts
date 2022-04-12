@@ -1,4 +1,5 @@
 export enum PipelineArtifacts {
   sourceArtifact = 'sourceArtifact',
-  buildInfraArtifact = 'buildInfraArtifact'
+  buildInfraArtifact = 'buildInfraArtifact',
+  buildSrcArtifact = 'buildSrcArtifact'
 }

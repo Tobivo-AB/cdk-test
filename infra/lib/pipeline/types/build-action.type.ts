@@ -6,6 +6,7 @@ export type BuildAction = {
   buildProject: PipelineProject,
   buildAction: CodeBuildAction,
   buildOutputs: {
-    buildInfraArtifact: Artifact
+    buildInfraArtifact: Artifact,
+    buildSrcArtifact: Artifact
   }
 }

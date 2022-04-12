@@ -44,6 +44,12 @@ export const buildspec = {
         files: [
           '**/*'
         ]
+      },
+      buildSrcArtifact: {
+        'base-directory': 'build',
+        files: [
+          '**/*'
+        ]
       }
     }
   }
