@@ -1,7 +1,6 @@
 import { Artifact } from 'aws-cdk-lib/aws-codepipeline';
-import { SecretValue, Stack } from 'aws-cdk-lib';
-import { GitHubSourceAction, GitHubTrigger } from 'aws-cdk-lib/aws-codepipeline-actions';
-import { GitHubOAuthTokenSecret } from '../enums/github-oauth-token-secret.enum';
+import { Stack } from 'aws-cdk-lib';
+import { CodeStarConnectionsSourceAction } from 'aws-cdk-lib/aws-codepipeline-actions';
 import { PipelineArtifacts } from '../enums/pipeline-artifacts.enum';
 import { SourceAction } from '../types/source-action.type';
 
@@ -12,19 +11,17 @@ import { SourceAction } from '../types/source-action.type';
  * utilised in further stages in a pipeline (such as build stages).
  */
 export const sourceGitHubAction = (scope: Stack): SourceAction => {
-  const oauthToken = SecretValue.secretsManager(GitHubOAuthTokenSecret.secretId);
 
   const sourceArtifact = new Artifact(PipelineArtifacts.sourceArtifact);
 
   const branch = 'main';
 
-  const sourceAction = new GitHubSourceAction({
+  const sourceAction = new CodeStarConnectionsSourceAction({
     actionName: 'SourceGitHubAction',
-    oauthToken,
+    connectionArn: 'arn:aws:codestar-connections:eu-north-1:949733501269:connection/e1c319b7-5877-4492-a303-b5dd54c4cc96',
     branch,
     owner: 'Tobivo-AB',
     repo: 'cdk-test',
-    trigger: GitHubTrigger.WEBHOOK,
     output: sourceArtifact
   });
 
