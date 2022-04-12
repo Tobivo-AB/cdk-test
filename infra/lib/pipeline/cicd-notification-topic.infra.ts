@@ -9,9 +9,9 @@ type CicdNotificationTopic = {
 }
 
 export const cicdNotificationTopic = (scope: Stack): CicdNotificationTopic => {
-  const cicdNotificationsTopic = new Topic(scope, 'CRFE-CicdNotifications');
+  const cicdNotificationsTopic = new Topic(scope, 'CDK-TEST-CicdNotifications');
 
-  const cicdChatbotSlackConfig = new SlackChannelConfiguration(scope, 'CRFE-ChatbotSlackNotifications', {
+  const cicdChatbotSlackConfig = new SlackChannelConfiguration(scope, 'CDK-TEST-ChatbotSlackNotifications', {
     slackChannelConfigurationName: `${scope.stackName}-cicd-notifications`,
     slackWorkspaceId: ChatbotSlackConfiguration.slackWorkspaceId,
     slackChannelId: ChatbotSlackConfiguration.slackEjaadTeamCicdChannelId,
