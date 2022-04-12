@@ -1,3 +1,3 @@
 export enum GitHubOAuthTokenSecret {
-  secretId = '/scs/pipeline/github_oauth_token'
+  secretId = '/test/pipeline/github_oauth_token'
 }

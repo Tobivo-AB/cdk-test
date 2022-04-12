@@ -78,7 +78,6 @@ export const codePipeline = (scope: Stack, notificationTopic: Topic): CodePipeli
     runOrder: 2,
     notificationTopic
   });
-  
   if (scope.account === AwsEnvironments.production) { deployStage.addAction(deploymentManualApproval); }
 
   return {

@@ -22,9 +22,9 @@ export const sourceGitHubAction = (scope: Stack): SourceAction => {
     actionName: 'SourceGitHubAction',
     oauthToken,
     branch,
-    owner: 'Tobivo-AB ',
+    owner: 'Tobivo-AB',
     repo: 'cdk-test',
-    trigger: GitHubTrigger.POLL,
+    trigger: GitHubTrigger.WEBHOOK,
     output: sourceArtifact
   });
 

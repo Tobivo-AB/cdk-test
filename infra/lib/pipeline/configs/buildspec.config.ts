@@ -1,3 +1,5 @@
+import { GitHubOAuthTokenSecret } from '../enums/github-oauth-token-secret.enum';
+
 /**
  * A collection of build commands and related settings used
  * in AWS CodeBuild to orchestrate the build process.
@@ -8,7 +10,9 @@
 export const buildspec = {
   version: 0.2,
   env: {
-    
+    'secrets-manager': {
+      GITHUB_TOKEN: GitHubOAuthTokenSecret.secretId
+    }
   },
   phases: {
     install: {
@@ -19,6 +23,7 @@ export const buildspec = {
     pre_build: {
       'on-failure': 'ABORT',
       commands: [
+        'echo //npm.pkg.github.com/:_authToken=${GITHUB_TOKEN} >> ~/.npmrc', // eslint-disable-line
         'npm install'
       ]
     },
