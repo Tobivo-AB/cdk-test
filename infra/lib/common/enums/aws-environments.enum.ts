@@ -1,4 +1,4 @@
 export enum AwsEnvironments {
-  uat = '949733501269',
-  production = '539599886928'
+  uat = '539599886928',
+  production = '949733501269'
 }
