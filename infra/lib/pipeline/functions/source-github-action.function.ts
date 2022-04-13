@@ -26,8 +26,8 @@ export const sourceGitHubAction = (scope: Stack): SourceAction => {
     actionName: 'SourceGitHubAction',
     connectionArn,
     branch,
-    owner: 'boohoo-com',
-    repo: 'global-returns-frontend',
+    owner: 'Tobivo-AB',
+    repo: 'cdk-test',
     output: sourceArtifact
   });
 
