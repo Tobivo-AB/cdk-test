@@ -1,4 +1,4 @@
 export enum StackIdentifiers {
-  frontendStack = 'CDKTEST',
-  pipelineStack = 'CDKTEST-CICD'
+  frontendStack = 'GRFE',
+  pipelineStack = 'GRFE-CICD'
 }

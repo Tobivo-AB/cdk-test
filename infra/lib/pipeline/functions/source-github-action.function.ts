@@ -1,7 +1,9 @@
 import { Artifact } from 'aws-cdk-lib/aws-codepipeline';
 import { Stack } from 'aws-cdk-lib';
 import { CodeStarConnectionsSourceAction } from 'aws-cdk-lib/aws-codepipeline-actions';
+import { AwsEnvironments } from '@infra/common/enums/aws-environments.enum';
 import { PipelineArtifacts } from '../enums/pipeline-artifacts.enum';
+import { GithubConnectionArn } from '../enums/github-connection-arn.enum';
 import { SourceAction } from '../types/source-action.type';
 
 /**
@@ -10,18 +12,22 @@ import { SourceAction } from '../types/source-action.type';
  * the code from the repository branch as an artifact that can be
  * utilised in further stages in a pipeline (such as build stages).
  */
-export const sourceGitHubAction = (scope: Stack): SourceAction => {
+export const sourceGitHubAction = (scope: Stack): SourceAction => {  
 
   const sourceArtifact = new Artifact(PipelineArtifacts.sourceArtifact);
 
-  const branch = 'main';
+  const branch = scope.account === AwsEnvironments.production ? 'main' : 'develop';
 
-  const sourceAction = new CodeStarConnectionsSourceAction({
+  const connectionArn = scope.account === AwsEnvironments.production 
+    ? GithubConnectionArn.production 
+    : GithubConnectionArn.uat;
+
+  const sourceAction =  new CodeStarConnectionsSourceAction({
     actionName: 'SourceGitHubAction',
-    connectionArn: 'arn:aws:codestar-connections:eu-north-1:949733501269:connection/e1c319b7-5877-4492-a303-b5dd54c4cc96',
+    connectionArn,
     branch,
-    owner: 'Tobivo-AB',
-    repo: 'cdk-test',
+    owner: 'boohoo-com',
+    repo: 'global-returns-frontend',
     output: sourceArtifact
   });
 

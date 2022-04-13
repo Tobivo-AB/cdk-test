@@ -7,7 +7,7 @@ import { PolicyStatement, AnyPrincipal } from 'aws-cdk-lib/aws-iam';
  * Sets up the S3 bucket in which the static React based web site 
  * is hosted
  */
-export const siteBucket = (scope: Construct): Bucket => {
+export const createSiteBucket = (scope: Construct): Bucket => {
   const bucket = new Bucket(
     scope, 
     'GlobalReturnsFrontendStore', 

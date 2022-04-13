@@ -1,4 +1,4 @@
-import { GitHubOAuthTokenSecret } from '../enums/github-oauth-token-secret.enum';
+import { ApiUrl } from '../enums/api-url.enum';
 
 /**
  * A collection of build commands and related settings used
@@ -10,8 +10,8 @@ import { GitHubOAuthTokenSecret } from '../enums/github-oauth-token-secret.enum'
 export const buildspec = {
   version: 0.2,
   env: {
-    'secrets-manager': {
-      GITHUB_TOKEN: GitHubOAuthTokenSecret.secretId
+    'parameter-store':{
+      API_URL: ApiUrl.urlId
     }
   },
   phases: {
@@ -23,7 +23,8 @@ export const buildspec = {
     pre_build: {
       'on-failure': 'ABORT',
       commands: [
-        'echo //npm.pkg.github.com/:_authToken=${GITHUB_TOKEN} >> ~/.npmrc', // eslint-disable-line
+        'echo -e \'API_URL=\'$API_URL > .env',
+        'cat .env',
         'npm install'
       ]
     },

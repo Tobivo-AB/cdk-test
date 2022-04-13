@@ -9,14 +9,11 @@ import { codeBuildAction } from './functions/codebuild-action.function';
 import { deployFrontendStack } from './functions/deploy-frontend-stack.function';
 import { pipelineSelfUpdateAction } from './functions/pipeline-self-update-action.function';
 import { sourceGitHubAction } from './functions/source-github-action.function';
-import { siteBucket } from './functions/site-bucket.function';
-import { PipelineBucket } from './enums/pipeline-bucket.enum';
-
-
+import { createSiteBucket } from './functions/create-site-bucket.function';
 
 /**
  * Defines a self-mutating pipeline with all the stages
- * required to build, test and deploy the SCS project.
+ * required to build, test and deploy the GR-Frontend project.
  */
 export const codePipeline = (scope: Stack, notificationTopic: Topic): Pipeline => {
   const artifactBucket = Bucket.fromBucketName(
@@ -24,7 +21,9 @@ export const codePipeline = (scope: Stack, notificationTopic: Topic): Pipeline =
     'PipelineArtifactBucket',
     `bh-${scope.account}.codepipeline-artifacts.${scope.region}`
   );
-  const deployBucket = siteBucket(scope);
+
+  const deployBucket = createSiteBucket(scope);
+
   const pipeline = new Pipeline(scope, `${StackIdentifiers.pipelineStack}Pipeline`, {
     pipelineName: `${StackIdentifiers.pipelineStack}-Pipeline`,
     artifactBucket,

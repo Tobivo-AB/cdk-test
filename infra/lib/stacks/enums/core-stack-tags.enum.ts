@@ -1,4 +1,4 @@
 export enum CoreStackTags {
-  Application = 'CDKTEST',
-  Team = 'Ejaad'
+  Application = 'GRFE',
+  Team = 'Nodiens'
 }
