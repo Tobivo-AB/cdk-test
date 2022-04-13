@@ -16,7 +16,7 @@ export const sourceGitHubAction = (scope: Stack): SourceAction => {
 
   const sourceArtifact = new Artifact(PipelineArtifacts.sourceArtifact);
 
-  const branch = scope.account === AwsEnvironments.production ? 'main' : 'develop';
+  const branch = scope.account === AwsEnvironments.production ? 'main' : 'main';
 
   const connectionArn = scope.account === AwsEnvironments.production 
     ? GithubConnectionArn.production 
