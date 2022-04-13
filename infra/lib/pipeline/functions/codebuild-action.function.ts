@@ -4,10 +4,12 @@ import {
 } from 'aws-cdk-lib/aws-codebuild';
 import { Artifact } from 'aws-cdk-lib/aws-codepipeline';
 import { CodeBuildAction } from 'aws-cdk-lib/aws-codepipeline-actions';
+import { StringParameter } from 'aws-cdk-lib/aws-ssm';
 import { Effect, PolicyStatement } from 'aws-cdk-lib/aws-iam';
 import { buildspec } from '../configs/buildspec.config';
 import { PipelineArtifacts } from '../enums/pipeline-artifacts.enum';
 import { BuildAction } from '../types/build-action.type';
+import { ApiUrl } from '../enums/api-url.enum';
 
 /**
  * Defines a CodeBuild action used to test, build
@@ -24,6 +26,12 @@ export const codeBuildAction = (scope: Construct, sourceArtifact: Artifact): Bui
     },
     buildSpec: BuildSpec.fromObject(buildspec)
   });
+
+  StringParameter.fromStringParameterName(
+    scope,
+    'ApiUrlParameter',
+    ApiUrl.urlId
+  ).grantRead(buildProject);
 
   buildProject.addToRolePolicy(new PolicyStatement({
     actions: ['ec2:DescribeAvailabilityZones'],
